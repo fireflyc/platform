@@ -37,7 +37,7 @@ class EditPostModal extends React.Component {
         this.handleKeyDown = this.handleKeyDown.bind(this);
         this.onPreferenceChange = this.onPreferenceChange.bind(this);
 
-        this.state = {editText: '', originalText: '', title: '', post_id: '', channel_id: '', comments: 0, refocusId: ''};
+        this.state = {editText: '', originalText: '', title: '', post_id: '', channel_id: '', comments: 0, refocusId: '', typing: false};
     }
     handleEdit() {
         var updatedPost = {};
@@ -75,7 +75,8 @@ class EditPostModal extends React.Component {
         $('#edit_post').modal('hide');
     }
     handleEditInput(editMessage) {
-        this.setState({editText: editMessage});
+        const typing = editMessage !== '';
+        this.setState({editText: editMessage, typing});
     }
     handleEditKeyPress(e) {
         if (!this.state.ctrlSend && e.which === KeyCodes.ENTER && !e.shiftKey && !e.altKey) {
@@ -92,7 +93,8 @@ class EditPostModal extends React.Component {
             post_id: options.postId || '',
             channel_id: options.channelId || '',
             comments: options.comments || 0,
-            refocusId: options.refocusId || ''
+            refocusId: options.refocusId || '',
+            typing: false
         });
 
         $(ReactDOM.findDOMNode(this.refs.modal)).modal('show');
@@ -111,7 +113,7 @@ class EditPostModal extends React.Component {
         var self = this;
 
         $(ReactDOM.findDOMNode(this.refs.modal)).on('hidden.bs.modal', () => {
-            self.setState({editText: '', originalText: '', title: '', channel_id: '', post_id: '', comments: 0, refocusId: '', error: ''});
+            self.setState({editText: '', originalText: '', title: '', channel_id: '', post_id: '', comments: 0, refocusId: '', error: '', typing: false});
         });
 
         $(ReactDOM.findDOMNode(this.refs.modal)).on('show.bs.modal', (e) => {
@@ -126,7 +128,8 @@ class EditPostModal extends React.Component {
                 channel_id: $(button).attr('data-channelid'),
                 post_id: $(button).attr('data-postid'),
                 comments: $(button).attr('data-comments'),
-                refocusId: $(button).attr('data-refocusid')
+                refocusId: $(button).attr('data-refocusid'),
+                typing: false
             });
         });
 
@@ -192,6 +195,7 @@ class EditPostModal extends React.Component {
                                 onKeyPress={this.handleEditKeyPress}
                                 onKeyDown={this.handleKeyDown}
                                 messageText={this.state.editText}
+                                typing={this.state.typing}
                                 createMessage={this.props.intl.formatMessage(holders.editPost)}
                                 supportsCommands={false}
                                 id='edit_textbox'
