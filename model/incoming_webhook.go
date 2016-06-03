@@ -13,7 +13,7 @@ import (
 
 const (
 	DEFAULT_WEBHOOK_USERNAME = "webhook"
-	DEFAULT_WEBHOOK_ICON     = "/static/images/webhook_icon.jpg"
+	DEFAULT_WEBHOOK_ICON     = ""
 )
 
 type IncomingWebhook struct {
